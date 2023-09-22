@@ -33,7 +33,7 @@ function divide(value : number) : (number : number) => Option<number>{
 }
 
 
-export default class Optional<T>{
+export default class Maybe<T>{
 
     value ?: T | null
 
@@ -41,13 +41,21 @@ export default class Optional<T>{
         this.value = value
     }
 
-    bind(f : (_ : T) => T){
+    bind(f : (_ : T) => Maybe<T>){
         if(this.value == null){
-            return new Optional<T>(null)
+            return new Maybe<T>(null)
         }
 
-        return new Optional(f(this.value))
+        return f(this.value)
 
+    }
+
+    static just<U>(value : U) : Maybe<U>{
+        return new Maybe<U>(value)
+    }
+
+    static nothing<U>() : Maybe<U>{
+        return new Maybe<U>()
     }
 
     unwrap(){
